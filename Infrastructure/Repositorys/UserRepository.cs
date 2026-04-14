@@ -28,7 +28,7 @@ public class UserRepository : BaseRepository<UserEntity>, IUserRepository
                && user.InstituteGuid == instituteGuid);
     }
 
-    public async Task<List<UserEntity>> GetAllUsersFromInstitute(Guid instituteGuid, Roles userRole)
+    public async Task<List<UserEntity>> GetAllUsersFromInstituteAsync(Guid instituteGuid, Roles userRole)
     {
         var query = _context
             .GetNoTrackingSet<UserEntity>()
@@ -58,6 +58,16 @@ public class UserRepository : BaseRepository<UserEntity>, IUserRepository
                 .Any(rt =>
                     rt.RefreshToken == refreshTokenGuid
                 ));
+    }
+
+    public async Task<List<string>> GetUsernamesByPrefixAsync(
+        string usernamePrefix)
+    {
+        return await _context
+            .GetNoTrackingSet<UserEntity>()
+            .Where(user => user.Username.StartsWith(usernamePrefix))
+            .Select(user => user.Username)
+            .ToListAsync();
     }
 
     private static IQueryable<UserEntity> ApplyRoleFilter(

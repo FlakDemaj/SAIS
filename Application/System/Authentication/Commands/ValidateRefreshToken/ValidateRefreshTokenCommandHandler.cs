@@ -59,7 +59,10 @@ public class ValidateRefreshTokenCommandHandler
             throw new SlaisException(AuthErrorCodes.NoValidTokenFound);
         }
 
-        var accessToken = _tokenService.GenerateAccessToken(user);
+        var accessToken = _tokenService.GenerateAccessToken(
+            user.Guid,
+            user.Role,
+            user.InstituteGuid);
 
         return new AccessTokenResponseDto
         {

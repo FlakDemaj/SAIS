@@ -48,7 +48,7 @@ public class GetAllUsersCommandHandlerTests
         var result = CreateUserTestData(
             2, 3, 4, 1);
 
-        _userRepository.GetAllUsersFromInstitute(
+        _userRepository.GetAllUsersFromInstituteAsync(
                 Arg.Any<Guid>(), Arg.Any<Roles>())
             .Returns(result);
 

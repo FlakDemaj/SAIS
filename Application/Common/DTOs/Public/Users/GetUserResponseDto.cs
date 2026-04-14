@@ -2,7 +2,7 @@ using Application.Common.DTOs.Base;
 
 using Domain.Common.Enums;
 
-namespace Application.Common.DTOs;
+namespace Application.Common.DTOs.Public.Users;
 
 public class GetUserResponseDto
 {

@@ -34,7 +34,6 @@ public class UserTestRepository
         var user = UserEntity.CreateTeacher(
             createdByUserGuid,
             email ?? Guid.CreateVersion7() + "@test.com",
-            password ?? "testpassword",
             username ?? Guid.CreateVersion7().ToString(),
             firstName ?? "Max",
             lastName ?? "Mustermann",
@@ -57,7 +56,6 @@ public class UserTestRepository
         var user = UserEntity.CreateStudent(
             createdByUserGuid,
             email ?? Guid.CreateVersion7() + "@test.com",
-            password ?? "testpassword",
             username ?? Guid.CreateVersion7().ToString(),
             firstName ?? "Max",
             lastName ?? "Mustermann",
@@ -80,7 +78,6 @@ public class UserTestRepository
         var user = UserEntity.CreateAdmin(
             createdByUserGuid,
             email ?? Guid.CreateVersion7() + "@test.com",
-            password ?? "testpassword",
             username ?? Guid.CreateVersion7().ToString(),
             firstName ?? "Max",
             lastName ?? "Mustermann",

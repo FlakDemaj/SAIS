@@ -1,5 +1,6 @@
 using Application.Common.DTOs;
 using Application.Common.DTOs.Base;
+using Application.Common.DTOs.Public.Users;
 using Application.Public.Users;
 
 using AutoMapper;

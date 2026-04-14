@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Security.Cryptography;
 
 using Domain.Common.Enums;
 using Domain.System.RefreshToken;
@@ -110,7 +111,7 @@ public class UserEntityBuilder
         SetProperty(user, nameof(UserEntity.State), _state);
         SetProperty(user, nameof(UserEntity.CreatedByUserGuid), _createdByUserGuid);
         SetProperty(user, nameof(UserEntity.CreatedByUser), _createdByUser);
-        SetProperty(user, nameof(UserEntity.Id), 1);
+        SetProperty(user, nameof(UserEntity.Id), RandomNumberGenerator.GetInt32(1, int.MaxValue));
 
         InitializeCollection(user);
 

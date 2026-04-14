@@ -1,5 +1,6 @@
 using Application.Common.Authentication;
 using Application.Common.Base;
+using Application.Common.DTOs.Public.Users;
 using Application.Interfaces;
 using Application.Utils.Logger;
 using Application.Utils.Mediator.Interfaces;
@@ -28,7 +29,7 @@ public class GetUsersQueryHandler :
         IAuthentication? authentication = null,
         CancellationToken cancellationToken = default)
     {
-        var users = await _userRepository.GetAllUsersFromInstitute(
+        var users = await _userRepository.GetAllUsersFromInstituteAsync(
             authentication!.InstitutionGuid, authentication.UserRole);
 
         return _mapper.Map<List<GetUsersResponseDto>>(users);

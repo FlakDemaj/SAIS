@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using SLAIS.Domain.Users;
 
-namespace Infrastructure.Pipelines.GuidResolver;
+namespace Infrastructure.Pipelines.Guid;
 
 public class GuidResolver
 {
@@ -20,7 +20,7 @@ public class GuidResolver
         _dbContext = dbContext;
     }
 
-    public async Task<Guid> ResolveAsync(
+    public async Task<System.Guid> ResolveAsync(
         int publicId,
         string entityType,
         CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ public class GuidResolver
         {
             "User" => await _dbContext.GetNoTrackingSet<UserEntity>()
                 .Where(p => p.Id == publicId)
-                .Select(p => (Guid?)p.Guid)
+                .Select(p => (System.Guid?)p.Guid)
                 .FirstOrDefaultAsync(cancellationToken),
 
             _ => throw new SlaisException(CommonErrorCodes.DefaultErrorCode)

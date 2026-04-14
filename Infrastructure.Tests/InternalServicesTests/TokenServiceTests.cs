@@ -1,3 +1,5 @@
+using Domain.Common.Enums;
+
 using FluentAssertions;
 
 using Infrastructure.Configurations;
@@ -33,16 +35,10 @@ public class TokenServiceTests
     [Fact]
     public void GenerateAccessToken_CreateToken()
     {
-        var user = UserEntity.CreateAdmin(
+        var token = _tokenService.GenerateAccessToken(
             Guid.CreateVersion7(),
-            "test@slais.de",
-            "HashedPassword",
-            "testAdmin",
-            "Max",
-            "Mustermann",
+            Roles.Teacher,
             Guid.CreateVersion7());
-
-        var token = _tokenService.GenerateAccessToken(user);
 
         token.Should().NotBeNull();
 

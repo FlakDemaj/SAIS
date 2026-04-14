@@ -3,6 +3,7 @@ using System.Net;
 using Application.Common.Authentication;
 using Application.Common.DTOs;
 using Application.Common.DTOs.Base;
+using Application.Common.DTOs.Public.Users;
 using Application.Public.Users;
 using Application.Public.Users.Querys.GetUser;
 using Application.Public.Users.Querys.GetUsers;

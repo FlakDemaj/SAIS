@@ -1,4 +1,4 @@
-using Application.Common.DTOs;
+using Application.Common.DTOs.Public.Users;
 using Application.Common.Interfaces;
 using Application.Utils.Interfaces.Mediator;
 using Application.Utils.Interfaces.Transaction;

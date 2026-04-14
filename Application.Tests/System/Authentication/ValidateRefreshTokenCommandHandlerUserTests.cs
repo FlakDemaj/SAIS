@@ -9,6 +9,7 @@ using Application.Utils.Logger;
 
 using AutoMapper;
 
+using Domain.Common.Enums;
 using Domain.Common.Exceptions;
 
 using FluentAssertions;
@@ -68,7 +69,7 @@ public class ValidateRefreshTokenCommandHandlerTests
         };
 
         _tokenService
-            .GenerateAccessToken(user)
+            .GenerateAccessToken(Arg.Any<Guid>(), Arg.Any<Roles>(), Arg.Any<Guid>())
             .Returns(expectedResult);
 
         var result = await _handler.HandleAsync(command, null, CancellationToken.None);

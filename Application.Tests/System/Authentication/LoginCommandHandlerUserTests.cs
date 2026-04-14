@@ -11,6 +11,7 @@ using Application.Utils.Logger;
 
 using AutoMapper;
 
+using Domain.Common.Enums;
 using Domain.Common.Exceptions;
 
 using FluentAssertions;
@@ -79,7 +80,7 @@ public class LoginCommandHandlerUserTests
             .Returns(user);
 
         _passwordHasher
-            .Verify(command.Password, user.HashedPassword)
+            .Verify(command.Password, user.HashedPassword!)
             .Returns(true);
 
         var expectedResult = new GeneratedAccessTokenResult
@@ -89,7 +90,7 @@ public class LoginCommandHandlerUserTests
         };
 
         _tokenService
-            .GenerateAccessToken(user)
+            .GenerateAccessToken(Arg.Any<Guid>(), Arg.Any<Roles>(), Arg.Any<Guid>())
             .Returns(expectedResult);
 
         var result = await _handlerUser.HandleAsync(command, null, CancellationToken.None);
@@ -112,10 +113,8 @@ public class LoginCommandHandlerUserTests
             .GetUserByUsernameOrEmailWithRefreshTokenAsync(command.LoginName)
             .Returns((UserEntity?)null);
 
-        var act = async () =>
-        {
-            return await _handlerUser.HandleAsync(command, null, CancellationToken.None);
-        };
+        var act = async () => await
+            _handlerUser.HandleAsync(command, null, CancellationToken.None);
 
         await act.Should()
             .ThrowAsync<SlaisException>()
@@ -137,13 +136,11 @@ public class LoginCommandHandlerUserTests
             .Returns(user);
 
         _passwordHasher
-            .Verify(command.Password, user.HashedPassword)
+            .Verify(command.Password, user.HashedPassword!)
             .Returns(false);
 
-        var act = async () =>
-        {
-            return await _handlerUser.HandleAsync(command, null, CancellationToken.None);
-        };
+        var act = async () => await
+            _handlerUser.HandleAsync(command, null, CancellationToken.None);
 
         await act.Should()
             .ThrowAsync<SlaisException>()
@@ -161,7 +158,7 @@ public class LoginCommandHandlerUserTests
             .Returns(user);
 
         _passwordHasher
-            .Verify(command.Password, user.HashedPassword)
+            .Verify(command.Password, user.HashedPassword!)
             .Returns(true);
 
         var expectedResult = new GeneratedAccessTokenResult
@@ -171,7 +168,7 @@ public class LoginCommandHandlerUserTests
         };
 
         _tokenService
-            .GenerateAccessToken(user)
+            .GenerateAccessToken(Arg.Any<Guid>(), Arg.Any<Roles>(), Arg.Any<Guid>())
             .Returns(expectedResult);
 
         await _handlerUser.HandleAsync(command, null, CancellationToken.None);
@@ -203,7 +200,7 @@ public class LoginCommandHandlerUserTests
             .Returns(user);
 
         _passwordHasher
-            .Verify(command.Password, user.HashedPassword)
+            .Verify(command.Password, user.HashedPassword!)
             .Returns(true);
 
         var expectedResult = new GeneratedAccessTokenResult
@@ -213,34 +210,25 @@ public class LoginCommandHandlerUserTests
         };
 
         _tokenService
-            .GenerateAccessToken(user)
+            .GenerateAccessToken(Arg.Any<Guid>(), Arg.Any<Roles>(), Arg.Any<Guid>())
             .Returns(expectedResult);
 
         await _handlerUser.HandleAsync(command, null, CancellationToken.None);
 
         var revokedRefreshTokensWithTheSameDeviceGuid = user
             .RefreshTokens
-            .Where(rt =>
-            {
-                return rt.DeviceGuid == command.DeviceGuid
-                                         && rt.Revoked;
-            });
+            .Where(rt => rt.DeviceGuid == command.DeviceGuid
+                         && rt.Revoked);
 
         var notRevokedRefreshTokensWithTheSameDeviceGuid = user
             .RefreshTokens
-            .Where(rt =>
-            {
-                return rt.DeviceGuid == command.DeviceGuid
-                                         && !rt.Revoked;
-            });
+            .Where(rt => rt.DeviceGuid == command.DeviceGuid
+                         && !rt.Revoked);
 
         var notRevokedRefreshTokensWithDifferentDeviceGuid = user
             .RefreshTokens
-            .Where(rt =>
-            {
-                return rt.DeviceGuid != command.DeviceGuid
-                                         && !rt.Revoked;
-            });
+            .Where(rt => rt.DeviceGuid != command.DeviceGuid
+                         && !rt.Revoked);
 
         revokedRefreshTokensWithTheSameDeviceGuid.Count().Should().Be(2);
         notRevokedRefreshTokensWithTheSameDeviceGuid.Count().Should().Be(1);

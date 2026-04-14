@@ -5,6 +5,8 @@ using System.Text;
 using Application.Authentication.Commands.Login;
 using Application.Common.Interfaces.Services;
 
+using Domain.Common.Enums;
+
 using Infrastructure.Configurations;
 
 using Microsoft.Extensions.Options;
@@ -29,9 +31,12 @@ public class TokenService : ITokenService
         _tokenHandler = new JwtSecurityTokenHandler();
     }
 
-    public GeneratedAccessTokenResult GenerateAccessToken(UserEntity user)
+    public GeneratedAccessTokenResult GenerateAccessToken(
+        Guid userGuid,
+        Roles userRole,
+        Guid instituteGuid)
     {
-        var claims = CreateUserClaims(user);
+        var claims = CreateUserClaims(userGuid, userRole, instituteGuid);
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_accessTokenOptions.Key));
@@ -67,16 +72,19 @@ public class TokenService : ITokenService
         return token;
     }
 
-    private static List<Claim> CreateUserClaims(UserEntity user)
+    private static List<Claim> CreateUserClaims(
+        Guid userGuid,
+        Roles userRole,
+        Guid instituteGuid)
     {
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Guid.ToString()),
+            new(JwtRegisteredClaimNames.Sub, userGuid.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.CreateVersion7().ToString()),
             new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
 
-            new(ClaimTypes.Role, user.Role.ToString()),
-            new("InstituteGuid", user.InstituteGuid.ToString()),
+            new(ClaimTypes.Role, userRole.ToString()),
+            new("InstituteGuid", instituteGuid.ToString()),
         };
 
         return claims;

@@ -1,14 +1,14 @@
 using Application.Common.Interfaces;
 
-namespace Infrastructure.Pipelines.GuidResolver;
+namespace Infrastructure.Pipelines.Guid;
 
 public class GuidResolverPipeline<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IHasGuid
 {
-    private readonly GuidResolver _resolver;
+    private readonly Guid.GuidResolver _resolver;
 
-    public GuidResolverPipeline(GuidResolver resolver)
+    public GuidResolverPipeline(Guid.GuidResolver resolver)
     {
         _resolver = resolver;
     }

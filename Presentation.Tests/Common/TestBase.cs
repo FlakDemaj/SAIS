@@ -58,7 +58,10 @@ public abstract class TestBase : IClassFixture<TestWebApplicationFactory>
         SetBearerToken(token);
     }
 
-    private static string GenerateTestToken(Roles role, Guid userGuid, Guid instituteGuid)
+    private static string GenerateTestToken(
+        Roles role,
+        Guid userGuid,
+        Guid instituteGuid)
     {
         var claims = new List<Claim>
         {

@@ -31,7 +31,7 @@ public abstract class TestBase : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    public async Task SaveChangesAsync()
+    protected async Task SaveChangesAsync()
     {
         await _dbContext.SaveChangesAsync();
     }
@@ -42,6 +42,12 @@ public abstract class TestBase : IAsyncLifetime
         return await _dbContext
             .GetTrackingSet<T>()
             .FirstOrDefaultAsync(rt => rt.Guid == userGuid);
+    }
+
+    protected async Task AddEntityAsync<T>(T entity) where T : class
+    {
+        await _dbContext.AddAsync(entity);
+        await _dbContext.SaveChangesAsync();
     }
 
     private async Task CleanDatabaseAsync()

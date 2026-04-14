@@ -1,6 +1,7 @@
 using Application.Authentication;
 using Application.Authentication.Commands;
 using Application.Authentication.Commands.Login;
+using Application.Common;
 using Application.Common.Authentication;
 using Application.Common.Base;
 using Application.Common.Interfaces.Services;
@@ -11,7 +12,9 @@ using Application.Utils.Mediator.Interfaces;
 
 using AutoMapper;
 
+using Domain.Common.Enums;
 using Domain.Common.Exceptions;
+using Domain.Public.Users;
 
 using Microsoft.Extensions.Options;
 
@@ -78,6 +81,8 @@ public class LoginCommandHandlerUser :
             throw new SlaisException(AuthErrorCodes.NoUserWithThisName);
         }
 
+        user.CheckUser();
+
         return user;
     }
 
@@ -85,7 +90,14 @@ public class LoginCommandHandlerUser :
         UserEntity user,
         string password)
     {
-        var checkPassword = _passwordHasher.Verify(password, user.HashedPassword);
+        if (user.HashedPassword == null)
+        {
+            throw new SlaisException(CommonErrorCodes.DefaultErrorCode);
+        }
+
+        var checkPassword = _passwordHasher.Verify(
+            password,
+            user.HashedPassword);
 
         if (checkPassword)
         {
@@ -102,7 +114,10 @@ public class LoginCommandHandlerUser :
         UserEntity user,
         LoginCommand request)
     {
-        var accessToken = _tokenService.GenerateAccessToken(user);
+        var accessToken = _tokenService.GenerateAccessToken(
+            user.Guid,
+            user.Role,
+            user.InstituteGuid);
 
         var refreshToken = user.CreateRefreshToken(
             _refreshTokenOptions.ExpiresInDays,

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection.Metadata.Ecma335;
 
 using Domain.Common.Enums;
 using Domain.Common.Exceptions;
@@ -11,7 +12,7 @@ public class UserEntity : UserNavigationPropertyEntity
 {
     public string Email { get; private set; }
 
-    public string HashedPassword { get; private set; }
+    public string? HashedPassword { get; private set; }
 
     public string Username { get; private set; }
 
@@ -32,7 +33,6 @@ public class UserEntity : UserNavigationPropertyEntity
     private UserEntity(
         Guid? createdByUserGuid,
         string email,
-        string hashedPassword,
         string username,
         string firstName,
         string lastName,
@@ -41,7 +41,7 @@ public class UserEntity : UserNavigationPropertyEntity
         : base(createdByUserGuid)
     {
         Email = email;
-        HashedPassword = hashedPassword;
+        HashedPassword = null;
         Username = username;
         FirstName = firstName;
         LastName = lastName;
@@ -55,7 +55,6 @@ public class UserEntity : UserNavigationPropertyEntity
     public static UserEntity CreateAdmin(
         Guid? createdByUserGuid,
         string email,
-        string hashedPassword,
         string username,
         string firstName,
         string lastName,
@@ -63,7 +62,6 @@ public class UserEntity : UserNavigationPropertyEntity
     {
         CheckInputs(
             email,
-            hashedPassword,
             username,
             firstName,
             lastName);
@@ -71,7 +69,6 @@ public class UserEntity : UserNavigationPropertyEntity
         return new UserEntity(
             createdByUserGuid,
             email,
-            hashedPassword,
             username,
             firstName,
             lastName,
@@ -83,7 +80,6 @@ public class UserEntity : UserNavigationPropertyEntity
     public static UserEntity CreateTeacher(
         Guid? createdByUserGuid,
         string email,
-        string hashedPassword,
         string username,
         string firstName,
         string lastName,
@@ -91,7 +87,6 @@ public class UserEntity : UserNavigationPropertyEntity
     {
         CheckInputs(
             email,
-            hashedPassword,
             username,
             firstName,
             lastName);
@@ -99,7 +94,6 @@ public class UserEntity : UserNavigationPropertyEntity
         return new UserEntity(
             createdByUserGuid,
             email,
-            hashedPassword,
             username,
             firstName,
             lastName,
@@ -111,7 +105,6 @@ public class UserEntity : UserNavigationPropertyEntity
     public static UserEntity CreateStudent(
         Guid? createdByUserGuid,
         string email,
-        string hashedPassword,
         string username,
         string firstName,
         string lastName,
@@ -119,7 +112,6 @@ public class UserEntity : UserNavigationPropertyEntity
     {
         CheckInputs(
             email,
-            hashedPassword,
             username,
             firstName,
             lastName);
@@ -127,11 +119,35 @@ public class UserEntity : UserNavigationPropertyEntity
         return new UserEntity(
             createdByUserGuid,
             email,
-            hashedPassword,
             username,
             firstName,
             lastName,
             Roles.Student,
+            instituteGuid
+        );
+    }
+
+    public static UserEntity CreateSuperAdmin(
+        Guid? createdByUserGuid,
+        string email,
+        string username,
+        string firstName,
+        string lastName,
+        Guid instituteGuid)
+    {
+        CheckInputs(
+            email,
+            username,
+            firstName,
+            lastName);
+
+        return new UserEntity(
+            createdByUserGuid,
+            email,
+            username,
+            firstName,
+            lastName,
+            Roles.SuperAdmin,
             instituteGuid
         );
     }
@@ -187,17 +203,9 @@ public class UserEntity : UserNavigationPropertyEntity
         CheckUser();
 
         var refreshToken = RefreshTokens
-            .FirstOrDefault(rt =>
-            {
-                return rt.RefreshToken == refreshTokenGuid;
-            });
+            .FirstOrDefault(rt => rt.RefreshToken == refreshTokenGuid);
 
-        if (refreshToken == null)
-        {
-            return false;
-        }
-
-        return refreshToken.Validate();
+        return refreshToken != null && refreshToken.Validate();
     }
 
     public void RevokeRefreshTokens(Guid deviceGuid)
@@ -221,7 +229,6 @@ public class UserEntity : UserNavigationPropertyEntity
 
     private static void CheckInputs(
         string email,
-        string hashedPassword,
         string username,
         string firstName,
         string lastName)
@@ -236,8 +243,7 @@ public class UserEntity : UserNavigationPropertyEntity
         if (string.IsNullOrWhiteSpace(username)
             || string.IsNullOrWhiteSpace(email)
             || string.IsNullOrWhiteSpace(firstName)
-            || string.IsNullOrWhiteSpace(lastName)
-            || string.IsNullOrWhiteSpace(hashedPassword))
+            || string.IsNullOrWhiteSpace(lastName))
         {
             throw new SlaisException(UserErrorCodes.InvalidInput);
         }
@@ -249,11 +255,25 @@ public class UserEntity : UserNavigationPropertyEntity
         }
     }
 
-    private void CheckUser()
+    public void CheckUser()
     {
         if (IsBlocked)
         {
             throw new SlaisException(UserErrorCodes.UserIsBlocked);
+        }
+
+        switch (State)
+        {
+            case States.Pending:
+                throw new SlaisException(UserErrorCodes.UserIsNotActivated);
+            case States.Deactive:
+                throw new SlaisException(UserErrorCodes.UserIsDeactivated);
+            case States.Deleted:
+                throw new SlaisException(UserErrorCodes.UserIsDeleted);
+            case States.Active:
+                return;
+            default:
+                throw new SlaisException(UserErrorCodes.InvalidInput);
         }
     }
 

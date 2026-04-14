@@ -22,7 +22,6 @@ public class UserTests
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
@@ -37,7 +36,6 @@ public class UserTests
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
@@ -53,13 +51,12 @@ public class UserTests
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
             Guid.CreateVersion7());
 
-        user.HashedPassword.Should().Be("HashedPassword");
+        user.HashedPassword.Should().BeNull();
     }
 
     [Fact]
@@ -68,7 +65,6 @@ public class UserTests
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
@@ -78,12 +74,25 @@ public class UserTests
     }
 
     [Fact]
+    public void CreateSuperAdmin_ShouldSetCorrectRole()
+    {
+        var user = UserEntity.CreateSuperAdmin(
+            Guid.CreateVersion7(),
+            "test@slais.de",
+            "testAdmin",
+            "Max",
+            "Mustermann",
+            Guid.CreateVersion7());
+
+        user.Role.Should().Be(Roles.SuperAdmin);
+    }
+
+    [Fact]
     public void CreateAdmin_ShouldSetCorrectRole()
     {
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
@@ -93,12 +102,39 @@ public class UserTests
     }
 
     [Fact]
+    public void CreateTeacher_ShouldSetCorrectRole()
+    {
+        var user = UserEntity.CreateTeacher(
+            Guid.CreateVersion7(),
+            "test@slais.de",
+            "testAdmin",
+            "Max",
+            "Mustermann",
+            Guid.CreateVersion7());
+
+        user.Role.Should().Be(Roles.Teacher);
+    }
+
+    [Fact]
+    public void CreateStudent_ShouldSetCorrectRole()
+    {
+        var user = UserEntity.CreateStudent(
+            Guid.CreateVersion7(),
+            "test@slais.de",
+            "testAdmin",
+            "Max",
+            "Mustermann",
+            Guid.CreateVersion7());
+
+        user.Role.Should().Be(Roles.Student);
+    }
+
+    [Fact]
     public void CreateAdmin_ShouldSetDefaultValues()
     {
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
@@ -115,7 +151,6 @@ public class UserTests
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
@@ -135,7 +170,6 @@ public class UserTests
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
@@ -150,7 +184,6 @@ public class UserTests
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
@@ -165,7 +198,6 @@ public class UserTests
         var user = UserEntity.CreateAdmin(
             Guid.CreateVersion7(),
             "test@slais.de",
-            "HashedPassword",
             "testAdmin",
             "Max",
             "Mustermann",
@@ -177,17 +209,13 @@ public class UserTests
     [Fact]
     public void CreateUser_ShouldThrowException_WhenEmailIsInvalid()
     {
-        var act = () =>
-        {
-            return UserEntity.CreateAdmin(
-                        Guid.CreateVersion7(),
-                        "test",
-                        "HashedPassword",
-                        "testAdmin",
-                        "Max",
-                        "Mustermann",
-                        Guid.CreateVersion7());
-        };
+        var act = () => UserEntity.CreateAdmin(
+            Guid.CreateVersion7(),
+            "test",
+            "testAdmin",
+            "Max",
+            "Mustermann",
+            Guid.CreateVersion7());
 
         act.ThrowsException(UserErrorCodes.InvalidInput);
     }
@@ -200,7 +228,6 @@ public class UserTests
             return UserEntity.CreateAdmin(
                         Guid.CreateVersion7(),
                         "test@slais.de",
-                        "HashedPassword",
                         " ",
                         "Max",
                         "Mustermann",
@@ -218,7 +245,6 @@ public class UserTests
             return UserEntity.CreateAdmin(
                         Guid.CreateVersion7(),
                         "test@slais.de",
-                        "HashedPassword",
                         "a",
                         "Max",
                         "Mustermann",
@@ -260,10 +286,11 @@ public class UserTests
     public void SetPassword_ShouldThrowException_PasswordIsTheSame()
     {
         var user = UserTestData.CreateUser();
+        var newPassword = "NewPassword";
 
         var act = () =>
         {
-            user.SetPassword(user.HashedPassword);
+            user.SetPassword(newPassword);
         };
 
         act.ThrowsException(UserErrorCodes.InvalidPassword);

@@ -12,7 +12,7 @@ using Infrastructure.InternalServices;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Context;
 using Infrastructure.Pipelines;
-using Infrastructure.Pipelines.GuidResolver;
+using Infrastructure.Pipelines.Guid;
 using Infrastructure.Pipelines.Transaction;
 using Infrastructure.Repositorys;
 
@@ -72,7 +72,7 @@ public static class DependencyInjection
                                     .Where(i =>
                                     {
                                         return i.IsGenericType &&
-                                                                                        i.GetGenericTypeDefinition() == handlerInterface;
+                                               i.GetGenericTypeDefinition() == handlerInterface;
                                     });
             },
                 (type, iface) =>

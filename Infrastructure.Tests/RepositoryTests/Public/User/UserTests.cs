@@ -38,7 +38,6 @@ public class UserTests : TestBase
             .CreateAdmin(
             null,
             "test@test.com",
-            "hashedpassword",
             "max_mustermann",
             "Max",
             "Mustermann",
@@ -242,7 +241,7 @@ public class UserTests : TestBase
             firstName: "Johnny",
             lastName: "Flair");
 
-        var users = await _userTestRepository.UserRepository.GetAllUsersFromInstitute(
+        var users = await _userTestRepository.UserRepository.GetAllUsersFromInstituteAsync(
             anotherInstitute.Guid, Roles.SuperAdmin);
 
         Assert.NotNull(users);
@@ -326,7 +325,7 @@ public class UserTests : TestBase
             firstName: "Johnny",
             lastName: "Flair");
 
-        var users = await _userTestRepository.UserRepository.GetAllUsersFromInstitute(
+        var users = await _userTestRepository.UserRepository.GetAllUsersFromInstituteAsync(
             anotherInstitute.Guid, Roles.Admin);
 
         Assert.NotNull(users);
@@ -402,7 +401,7 @@ public class UserTests : TestBase
             firstName: "Johnny",
             lastName: "Flair");
 
-        var users = await _userTestRepository.UserRepository.GetAllUsersFromInstitute(
+        var users = await _userTestRepository.UserRepository.GetAllUsersFromInstituteAsync(
             anotherInstitute.Guid, Roles.Teacher);
 
         Assert.NotNull(users);
@@ -468,7 +467,7 @@ public class UserTests : TestBase
             firstName: "Johnny",
             lastName: "Flair");
 
-        var users = await _userTestRepository.UserRepository.GetAllUsersFromInstitute(
+        var users = await _userTestRepository.UserRepository.GetAllUsersFromInstituteAsync(
             anotherInstitute.Guid, Roles.Student);
 
         Assert.NotNull(users);
