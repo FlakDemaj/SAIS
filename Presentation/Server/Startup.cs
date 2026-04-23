@@ -145,22 +145,16 @@ public static class Startup
 
     private static void EnableCors(IServiceCollection service)
     {
-        service.AddCors(options =>
-        {
-            options.AddPolicy("AllowLocalhost",
-                policy =>
-                {
-                    policy.WithOrigins(
+        service.AddCors(options => options.AddPolicy("AllowLocalhost",
+                policy => policy.WithOrigins(
                             "http://localhost:5165",
                             "https://localhost:7287",
                             "http://localhost:56679",
                             "https://localhost:44339",
-                            "http://localhost:3000" // falls Frontend
+                            "http://localhost:3000"
                         )
                         .WithMethods("GET", "POST", "PUT", "DELETE")
-                        .AllowAnyHeader();
-                });
-        });
+                        .AllowAnyHeader()));
     }
 
     private static void EnableMiddlewares(IApplicationBuilder builder)

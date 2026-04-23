@@ -1,5 +1,4 @@
 using Application.Common.DTOs.Base;
-using Application.Common.DTOs.Public.Users;
 using Application.Utils.Interfaces.Mediator;
 
 using Domain.Common.Enums;
