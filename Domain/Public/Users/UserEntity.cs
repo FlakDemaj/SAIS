@@ -48,7 +48,7 @@ public class UserEntity : UserNavigationPropertyEntity
         Role = role;
         LoginAttempts = 0;
         IsBlocked = false;
-        State = States.Active;
+        State = States.Pending;
         InstituteGuid = instituteGuid;
     }
 
@@ -266,7 +266,7 @@ public class UserEntity : UserNavigationPropertyEntity
         {
             case States.Pending:
                 throw new SlaisException(UserErrorCodes.UserIsNotActivated);
-            case States.Deactive:
+            case States.Deactived:
                 throw new SlaisException(UserErrorCodes.UserIsDeactivated);
             case States.Deleted:
                 throw new SlaisException(UserErrorCodes.UserIsDeleted);

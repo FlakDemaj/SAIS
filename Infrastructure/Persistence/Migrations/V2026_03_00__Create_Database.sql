@@ -49,7 +49,7 @@ create table if not exists public.users
     user_guid               uuid        primary key default gen_random_uuid(),
     user_id                 int         generated always as identity unique,
     email                   text        not null unique,
-    password_hashed         text        not null,
+    password_hashed         text,
     username                text        not null unique,
     first_name              text        not null,
     last_name               text        not null,

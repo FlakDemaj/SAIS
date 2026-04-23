@@ -2,7 +2,7 @@ using Domain.Common.Enums;
 
 using SLAIS.Domain.Users;
 
-namespace Application.Interfaces;
+namespace Application.Common.Interfaces.Repositorys;
 
 public interface IUserRepository : IBaseRepository<UserEntity>
 {

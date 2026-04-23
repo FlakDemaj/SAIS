@@ -1,6 +1,7 @@
 using Application.Common.Authentication;
 using Application.Common.Base;
 using Application.Common.DTOs.Public.Users;
+using Application.Common.Interfaces.Repositorys;
 using Application.Interfaces;
 using Application.Utils.Logger;
 using Application.Utils.Mediator.Interfaces;
@@ -49,7 +50,7 @@ public class CreateUserCommandHandler :
         return new CreateUserResponseDto
         {
             Success = true,
-            UserId = createdUser.Guid
+            UserGuid = createdUser.Guid
         };
     }
 

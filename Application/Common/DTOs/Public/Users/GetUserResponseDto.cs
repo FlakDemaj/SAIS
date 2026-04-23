@@ -6,6 +6,8 @@ namespace Application.Common.DTOs.Public.Users;
 
 public class GetUserResponseDto
 {
+    public int UserId { get; set; }
+
     public required string Username { get; set; }
 
     public required string Email { get; set; }

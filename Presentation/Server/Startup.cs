@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 
 using Application;
@@ -45,23 +46,25 @@ public static class Startup
         services.AddControllers();
         services.AddSwaggerGen(options =>
         {
-            options.AddSecurityDefinition("Bearer",
-                new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "JWT Access Token eingeben"
-                });
-
-            options.AddSecurityRequirement(_ => new OpenApiSecurityRequirement
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                {
-                    new OpenApiSecuritySchemeReference("Bearer"),
-                    new List<string>()
-                }
+                Description = "JWT Authorization header using Bearer scheme",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            });
+
+            options.AddSecurityRequirement(document =>
+            {
+                var securityRequirement = new OpenApiSecurityRequirement();
+
+                var schemeReference = new OpenApiSecuritySchemeReference("Bearer", document);
+
+                securityRequirement.Add(schemeReference, []);
+
+                return securityRequirement;
             });
         });
 
@@ -74,6 +77,7 @@ public static class Startup
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
+                    RoleClaimType = ClaimTypes.Role,
                     ValidIssuer = configuration["AccessToken:Issuer"],
                     ValidAudience = configuration["AccessToken:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(
@@ -134,6 +138,7 @@ public static class Startup
 
         app.UseHttpsRedirection();
         app.UseSentryTracing();
+        app.UseCors("AllowOrigin");
         app.UseAuthentication();
         app.UseAuthorization();
         EnableMiddlewares(app);

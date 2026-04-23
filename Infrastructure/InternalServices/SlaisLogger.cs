@@ -2,7 +2,7 @@ using Application.Utils.Logger;
 
 using Microsoft.Extensions.Logging;
 
-namespace SLAIS.Infrastructure.InternalServices.Logging;
+namespace Infrastructure.InternalServices;
 
 public class SlaisLogger<T> : ISlaisLogger<T>
     where T : class

@@ -80,6 +80,10 @@ public sealed class UserMappingProfile : Profile
         CreateMap<UserEntity, GetUsersResponseDto>();
         CreateMap<UserEntity, GetUserResponseDto>()
             .ForMember(dto =>
+                dto.UserId,
+                opt =>
+                    opt.MapFrom(src => src.Id))
+            .ForMember(dto =>
                     dto.BaseAuditCreated,
                 opt =>
                 {

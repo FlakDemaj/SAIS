@@ -40,12 +40,23 @@ public class UserController : BaseRestController
             cancellationToken);
     }
 
+    [HttpGet("{userGuid:guid}")]
+    public async Task<ActionResult<GetUserResponseDto>> GetUserByGuidAsync(
+        [FromRoute] Guid userGuid,
+        CancellationToken cancellationToken)
+    {
+        return await _mediator.SendAsync(
+            new GetUserQuery { Guid = userGuid },
+            Authentication,
+            cancellationToken);
+    }
+
     [HttpPost]
     public async Task<ActionResult<CreateUserResponseDto>> CreateUserAsync(
         [FromBody] CreateUserCommand createUserCommand,
         CancellationToken cancellationToken)
     {
-        return await _mediator.SendAsync(
+         return await _mediator.SendAsync(
             createUserCommand,
             Authentication,
             cancellationToken);

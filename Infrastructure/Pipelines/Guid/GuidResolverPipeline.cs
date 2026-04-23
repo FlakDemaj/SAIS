@@ -4,11 +4,11 @@ namespace Infrastructure.Pipelines.Guid;
 
 public class GuidResolverPipeline<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IHasGuid
+    where TRequest : notnull
 {
-    private readonly Guid.GuidResolver _resolver;
+    private readonly GuidResolver _resolver;
 
-    public GuidResolverPipeline(Guid.GuidResolver resolver)
+    public GuidResolverPipeline(GuidResolver resolver)
     {
         _resolver = resolver;
     }
@@ -18,14 +18,19 @@ public class GuidResolverPipeline<TRequest, TResponse>
         Func<Task<TResponse>> next,
         CancellationToken cancellationToken)
     {
+        if (request is not IHasGuid hasGuid
+            || hasGuid.Guid != System.Guid.Empty)
+        {
+            return await next();
+        }
+
         var guid = await _resolver.ResolveAsync(
-            request.PublicId,
-            request.EntityType,
+            hasGuid.PublicId,
+            hasGuid.EntityType,
             cancellationToken);
 
-        request.Guid = guid;
+        hasGuid.Guid = guid;
 
         return await next();
     }
-
 }

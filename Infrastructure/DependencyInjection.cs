@@ -1,6 +1,7 @@
 using System.Reflection;
 
 using Application;
+using Application.Common.Interfaces.Repositorys;
 using Application.Common.Interfaces.Services;
 using Application.Interfaces;
 using Application.Utils.Interfaces.Mediator;
@@ -17,8 +18,6 @@ using Infrastructure.Pipelines.Transaction;
 using Infrastructure.Repositorys;
 
 using Microsoft.Extensions.DependencyInjection;
-
-using SLAIS.Infrastructure.InternalServices.Logging;
 
 namespace Infrastructure;
 
@@ -91,6 +90,7 @@ public static class DependencyInjection
         }
 
         services.AddScoped<IMediator, Mediator>();
+        services.AddScoped<GuidResolver>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(GuidResolverPipeline<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionPipeline<,>));
     }

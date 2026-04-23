@@ -4,6 +4,7 @@ using Application.Authentication.Commands.Login;
 using Application.Common;
 using Application.Common.Authentication;
 using Application.Common.Base;
+using Application.Common.Interfaces.Repositorys;
 using Application.Common.Interfaces.Services;
 using Application.Common.Options;
 using Application.Interfaces;

@@ -45,13 +45,26 @@ public class Mediator : IMediator
         var pipelineType = typeof(IPipelineBehavior<,>)
             .MakeGenericType(requestType, typeof(TResponse));
 
-        var pipeline = _serviceProvider.GetRequiredService(pipelineType);
+        var pipelines = _serviceProvider
+            .GetServices(pipelineType)
+            .Reverse()
+            .ToList();
 
-        var pipelineMethod = pipelineType.GetMethod("HandleAsync");
+        var next = () =>
+            (Task<TResponse>)method!.Invoke(handler, [request, authentication, cancellationToken])!;
 
-        return await (Task<TResponse>)pipelineMethod?
-            .Invoke(pipeline, [request, (Func<Task<TResponse>?>)Next, cancellationToken])!;
+        // Pipelines von innen nach außen verketten
+        foreach (var pipeline in pipelines)
+        {
+            var currentNext = next;
+            var pipelineMethod = pipelineType.GetMethod("HandleAsync");
+            var currentPipeline = pipeline;
 
-        Task<TResponse>? Next() => (Task<TResponse>)method?.Invoke(handler, [request, authentication, cancellationToken])!;
+            next = () => (Task<TResponse>)pipelineMethod!
+                .Invoke(currentPipeline, [request, currentNext, cancellationToken])!;
+        }
+
+        return await next();
+
     }
 }

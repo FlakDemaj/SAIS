@@ -1,12 +1,11 @@
 using Domain.Common.Enums;
 using Domain.Public.Users;
+using Domain.Tests.Common.TestDataCreator;
 using Domain.Tests.Utils.Extensions;
 
 using FluentAssertions;
 
 using SLAIS.Domain.Users;
-
-using Tests.Shared.TestDataCreator;
 
 using Xunit;
 

@@ -3,6 +3,7 @@ using Application.Authentication.Commands.Login;
 using Application.Authentication.Commands.ValidateRefreshToken;
 using Application.Common.Authentication;
 using Application.Common.Base;
+using Application.Common.Interfaces.Repositorys;
 using Application.Common.Interfaces.Services;
 using Application.Interfaces;
 using Application.Utils.Interfaces.Transaction;
