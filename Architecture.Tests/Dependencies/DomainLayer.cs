@@ -23,16 +23,10 @@ public class DomainLayer : TestBase
         var referencedAssemblies = typeof(Domain.IDomainAssemblyMarker)
             .Assembly
             .GetReferencedAssemblies()
-            .Select(a =>
-            {
-                return a.Name;
-            })
+            .Select(a => a.Name)
             .ToList();
 
         Assert.True(_allowedAssembliesForDomain
-            .All(allowed =>
-            {
-                return referencedAssemblies.Contains(allowed);
-            }));
+            .All(allowed => referencedAssemblies.Contains(allowed)));
     }
 }

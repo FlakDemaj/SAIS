@@ -27,38 +27,29 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Progra
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration((_, config) =>
+        builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(new Dictionary<string, string?>
         {
-            config.AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["Database:Connection_String"] = _connectionString,
-                ["AccessToken:Issuer"] = TestIssuer,
-                ["AccessToken:Audience"] = TestAudience,
-                ["AccessToken:Key"] = TestJwtSecret,
-                ["AccessToken:ExpiresInMinutes"] = "15",
-                ["RefreshToken:ExpiresInDays"] = "30",
-                ["CommonOptions:MaxLoginAttempts"] = "5",
-                ["Sentry:Dsn"] = ""
-            });
-        });
+            ["Database:Connection_String"] = _connectionString,
+            ["AccessToken:Issuer"] = TestIssuer,
+            ["AccessToken:Audience"] = TestAudience,
+            ["AccessToken:Key"] = TestJwtSecret,
+            ["AccessToken:ExpiresInMinutes"] = "15",
+            ["RefreshToken:ExpiresInDays"] = "30",
+            ["CommonOptions:MaxLoginAttempts"] = "5",
+            ["Sentry:Dsn"] = ""
+        }));
 
-        builder.ConfigureServices(services =>
+        builder.ConfigureServices(services => services.PostConfigure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options => options.TokenValidationParameters = new TokenValidationParameters
         {
-            services.PostConfigure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = TestIssuer,
-                    ValidAudience = TestAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = TestIssuer,
+            ValidAudience = TestAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(TestJwtSecret))
-                };
-            });
-        });
+        }));
 
         builder.ConfigureLogging(logging => logging.ClearProviders());
 

@@ -7,15 +7,12 @@ using Application.Common.Base;
 using Application.Common.Interfaces.Repositorys;
 using Application.Common.Interfaces.Services;
 using Application.Common.Options;
-using Application.Interfaces;
 using Application.Utils.Logger;
 using Application.Utils.Mediator.Interfaces;
 
 using AutoMapper;
 
-using Domain.Common.Enums;
 using Domain.Common.Exceptions;
-using Domain.Public.Users;
 
 using Microsoft.Extensions.Options;
 

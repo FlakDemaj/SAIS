@@ -1,9 +1,9 @@
 using Application.Common.Interfaces.Repositorys;
-using Application.Interfaces;
 
 using Domain.Common.Enums;
 
 using Infrastructure.Persistence.Context;
+using Infrastructure.Repositorys.Base;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -56,9 +56,7 @@ public class UserRepository : BaseRepository<UserEntity>, IUserRepository
             .GetTrackingSet<UserEntity>()
             .Include(user => user.RefreshTokens)
             .FirstOrDefaultAsync(user => user.RefreshTokens
-                .Any(rt =>
-                    rt.RefreshToken == refreshTokenGuid
-                ));
+                .Any(rt => rt.RefreshToken == refreshTokenGuid));
     }
 
     public async Task<List<string>> GetUsernamesByPrefixAsync(

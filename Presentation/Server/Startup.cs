@@ -69,20 +69,17 @@ public static class Startup
         });
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+            .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    RoleClaimType = ClaimTypes.Role,
-                    ValidIssuer = configuration["AccessToken:Issuer"],
-                    ValidAudience = configuration["AccessToken:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                RoleClaimType = ClaimTypes.Role,
+                ValidIssuer = configuration["AccessToken:Issuer"],
+                ValidAudience = configuration["AccessToken:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(configuration["AccessToken:Key"]!))
-                };
             });
     }
 
@@ -147,16 +144,10 @@ public static class Startup
 
     private static void EnableCors(IServiceCollection service)
     {
-        service.AddCors(option =>
-        {
-            option.AddPolicy("AllowOrigin",
-                policy =>
-                {
-                    policy.AllowAnyOrigin()
+        service.AddCors(option => option.AddPolicy("AllowOrigin",
+                policy => policy.AllowAnyOrigin()
                         .AllowAnyMethod()
-                        .AllowAnyHeader();
-                });
-        });
+                        .AllowAnyHeader()));
     }
 
     private static void EnableMiddlewares(IApplicationBuilder builder)

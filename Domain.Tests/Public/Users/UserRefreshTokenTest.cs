@@ -130,14 +130,11 @@ public class UserRefreshTokenTest
     {
         var user = UserTestData.CreateUser();
 
-        var act = () =>
-        {
-            return user.CreateRefreshToken(
+        var act = () => user.CreateRefreshToken(
                         0,
                         Guid.CreateVersion7(),
                         "Test Device",
                         IPAddress.Loopback);
-        };
 
         act.ThrowsException(RefreshTokenErrorCodes.InvalidExpiration);
     }
@@ -147,14 +144,11 @@ public class UserRefreshTokenTest
     {
         var user = UserTestData.CreateUser();
 
-        var act = () =>
-        {
-            return user.CreateRefreshToken(
+        var act = () => user.CreateRefreshToken(
                         7,
                         Guid.Empty,
                         "Test Device",
                         IPAddress.Loopback);
-        };
 
         act.ThrowsException(RefreshTokenErrorCodes.InvalidDeviceGuid);
     }
@@ -164,14 +158,11 @@ public class UserRefreshTokenTest
     {
         var user = UserTestData.CreateUser();
 
-        var act = () =>
-        {
-            return user.CreateRefreshToken(
+        var act = () => user.CreateRefreshToken(
                         7,
                         Guid.CreateVersion7(),
                         " ",
                         IPAddress.Loopback);
-        };
 
         act.ThrowsException(RefreshTokenErrorCodes.InvalidDeviceName);
     }
@@ -211,10 +202,7 @@ public class UserRefreshTokenTest
         var user = UserTestData.CreateBlockedUser();
         var token = UserTestData.CreateRefreshToken(user);
 
-        var act = () =>
-        {
-            return user.ValidateRefreshToken(token.RefreshToken);
-        };
+        var act = () => user.ValidateRefreshToken(token.RefreshToken);
 
         act.ThrowsException(UserErrorCodes.UserIsBlocked);
     }
@@ -272,18 +260,12 @@ public class UserRefreshTokenTest
 
         var revokedRefreshToken = user
             .RefreshTokens
-            .Where(rt =>
-            {
-                return rt.DeviceGuid == deviceGuid;
-            })
+            .Where(rt => rt.DeviceGuid == deviceGuid)
             .FirstOrDefault();
 
         var notRevokedRefreshToken = user
             .RefreshTokens
-            .Where(rt =>
-            {
-                return rt.DeviceGuid != deviceGuid;
-            })
+            .Where(rt => rt.DeviceGuid != deviceGuid)
             .FirstOrDefault();
 
         revokedRefreshToken.Should().NotBeNull();

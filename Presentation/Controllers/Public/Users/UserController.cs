@@ -56,9 +56,9 @@ public class UserController : BaseRestController
         [FromBody] CreateUserCommand createUserCommand,
         CancellationToken cancellationToken)
     {
-         return await _mediator.SendAsync(
-            createUserCommand,
-            Authentication,
-            cancellationToken);
+        return await _mediator.SendAsync(
+           createUserCommand,
+           Authentication,
+           cancellationToken);
     }
 }

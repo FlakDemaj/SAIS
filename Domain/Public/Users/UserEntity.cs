@@ -1,5 +1,4 @@
 using System.Net;
-using System.Reflection.Metadata.Ecma335;
 
 using Domain.Common.Enums;
 using Domain.Common.Exceptions;
@@ -212,11 +211,8 @@ public class UserEntity : UserNavigationPropertyEntity
     {
         var activeRefreshTokensInTheDevice =
             RefreshTokens
-                .Where(rt =>
-                {
-                    return rt.DeviceGuid == deviceGuid
-                                                 && !rt.Revoked;
-                })
+                .Where(rt => rt.DeviceGuid == deviceGuid
+                                                 && !rt.Revoked)
                 .ToList();
 
         foreach (var refreshToken in activeRefreshTokensInTheDevice)

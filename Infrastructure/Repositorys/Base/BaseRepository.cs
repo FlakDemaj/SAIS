@@ -1,11 +1,10 @@
 using Application.Common.Interfaces.Repositorys;
-using Application.Interfaces;
 
 using Infrastructure.Persistence.Context;
 
 using SLAIS.Domain.Commom;
 
-namespace Infrastructure.Repositorys;
+namespace Infrastructure.Repositorys.Base;
 
 public abstract class BaseRepository<T> : SlaisRepository, IBaseRepository<T>
     where T : BaseGuidEntity

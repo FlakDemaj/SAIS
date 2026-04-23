@@ -31,10 +31,7 @@ public class SlaisDbContext : DbContext
 
         optionsBuilder.UseNpgsql(
             _connectionString,
-            o =>
-            {
-                o.CommandTimeout(120);
-            });
+            o => o.CommandTimeout(120));
 
         if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Production")
         {

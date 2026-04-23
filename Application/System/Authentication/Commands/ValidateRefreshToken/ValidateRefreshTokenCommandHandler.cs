@@ -5,7 +5,6 @@ using Application.Common.Authentication;
 using Application.Common.Base;
 using Application.Common.Interfaces.Repositorys;
 using Application.Common.Interfaces.Services;
-using Application.Interfaces;
 using Application.Utils.Interfaces.Transaction;
 using Application.Utils.Logger;
 using Application.Utils.Mediator.Interfaces;

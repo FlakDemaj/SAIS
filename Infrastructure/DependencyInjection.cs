@@ -3,7 +3,6 @@ using System.Reflection;
 using Application;
 using Application.Common.Interfaces.Repositorys;
 using Application.Common.Interfaces.Services;
-using Application.Interfaces;
 using Application.Utils.Interfaces.Mediator;
 using Application.Utils.Interfaces.Transaction;
 using Application.Utils.Logger;
@@ -61,23 +60,11 @@ public static class DependencyInjection
 
         var handlers = Assembly.GetAssembly(typeof(IApplicationAssemblyMarker))
             ?.GetTypes()
-            .Where(t =>
-            {
-                return t is { IsAbstract: false, IsInterface: false };
-            })
-            .SelectMany(t =>
-            {
-                return t.GetInterfaces()
-                                    .Where(i =>
-                                    {
-                                        return i.IsGenericType &&
-                                               i.GetGenericTypeDefinition() == handlerInterface;
-                                    });
-            },
-                (type, iface) =>
-                {
-                    return new { type, iface };
-                });
+            .Where(t => t is { IsAbstract: false, IsInterface: false })
+            .SelectMany(t => t.GetInterfaces()
+                                    .Where(i => i.IsGenericType &&
+                                               i.GetGenericTypeDefinition() == handlerInterface),
+                (type, iface) => new { type, iface });
 
         if (handlers == null)
         {

@@ -1,9 +1,8 @@
 using System.Net;
 
 using Application.Common.DTOs.Public.Users;
-using Application.Public.Users.Commands.CreateUser;
-
 using Application.Public.Users;
+using Application.Public.Users.Commands.CreateUser;
 
 using Domain.Common.Enums;
 

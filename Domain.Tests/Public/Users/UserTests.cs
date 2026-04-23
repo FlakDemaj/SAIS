@@ -209,12 +209,12 @@ public class UserTests
     public void CreateUser_ShouldThrowException_WhenEmailIsInvalid()
     {
         var act = () => UserEntity.CreateAdmin(
-            Guid.CreateVersion7(),
-            "test",
-            "testAdmin",
-            "Max",
-            "Mustermann",
-            Guid.CreateVersion7());
+                        Guid.CreateVersion7(),
+                        "test",
+                        "testAdmin",
+                        "Max",
+                        "Mustermann",
+                        Guid.CreateVersion7());
 
         act.ThrowsException(UserErrorCodes.InvalidInput);
     }
@@ -222,16 +222,13 @@ public class UserTests
     [Fact]
     public void CreateUser_ShouldThrowException_WhenUsernameIsWhitespace()
     {
-        var act = () =>
-        {
-            return UserEntity.CreateAdmin(
+        var act = () => UserEntity.CreateAdmin(
                         Guid.CreateVersion7(),
                         "test@slais.de",
                         " ",
                         "Max",
                         "Mustermann",
                         Guid.CreateVersion7());
-        };
 
         act.ThrowsException(UserErrorCodes.InvalidInput);
     }
@@ -239,16 +236,13 @@ public class UserTests
     [Fact]
     public void CreateUser_ShouldThrowException_WhenUsernameIsToSmall()
     {
-        var act = () =>
-        {
-            return UserEntity.CreateAdmin(
+        var act = () => UserEntity.CreateAdmin(
                         Guid.CreateVersion7(),
                         "test@slais.de",
                         "a",
                         "Max",
                         "Mustermann",
                         Guid.CreateVersion7());
-        };
 
         act.ThrowsException(UserErrorCodes.InvalidInput);
     }
@@ -273,10 +267,7 @@ public class UserTests
     {
         var user = UserTestData.CreateUser();
 
-        var act = () =>
-        {
-            user.SetPassword(" ");
-        };
+        var act = () => user.SetPassword(" ");
 
         act.ThrowsException(UserErrorCodes.InvalidPassword);
     }
@@ -287,10 +278,7 @@ public class UserTests
         var user = UserTestData.CreateUser();
         var newPassword = "NewPassword";
 
-        var act = () =>
-        {
-            user.SetPassword(newPassword);
-        };
+        var act = () => user.SetPassword(newPassword);
 
         act.ThrowsException(UserErrorCodes.InvalidPassword);
     }
@@ -322,10 +310,7 @@ public class UserTests
     {
         var user = UserTestData.CreateBlockedUser();
 
-        var act = () =>
-        {
-            user.IncrementWrongLoginAttempts();
-        };
+        var act = () => user.IncrementWrongLoginAttempts();
 
         act.ThrowsException(UserErrorCodes.UserIsBlocked);
     }

@@ -50,10 +50,7 @@ public class AuthenticationMiddleware
             context
                 .User
                 .Claims
-                .FirstOrDefault(c =>
-                {
-                    return c.Type == ClaimTypes.NameIdentifier;
-                })?
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?
                 .Value;
 
         if (string.IsNullOrWhiteSpace(userGuidString))
@@ -74,10 +71,7 @@ public class AuthenticationMiddleware
         var instituteGuidString = context
             .User
             .Claims
-            .FirstOrDefault(claim =>
-            {
-                return claim.Type == "InstituteGuid";
-            })?
+            .FirstOrDefault(claim => claim.Type == "InstituteGuid")?
             .Value;
 
         if (string.IsNullOrWhiteSpace(instituteGuidString))
@@ -100,10 +94,7 @@ public class AuthenticationMiddleware
                 .User
                 .Claims
                 .FirstOrDefault(
-                    c =>
-                    {
-                        return c.Type == ClaimTypes.Role;
-                    })?
+                    c => c.Type == ClaimTypes.Role)?
                 .Value;
 
         if (string.IsNullOrWhiteSpace(userRoleString))
@@ -127,10 +118,7 @@ public class AuthenticationMiddleware
             return true;
         }
 
-        var allowAnonymous = endpoint.Metadata.Any(f =>
-        {
-            return f is AllowAnonymousAttribute;
-        });
+        var allowAnonymous = endpoint.Metadata.Any(f => f is AllowAnonymousAttribute);
         return allowAnonymous;
     }
 

@@ -69,7 +69,7 @@ csharp_style_expression_bodied_properties = false:error
 csharp_style_expression_bodied_constructors = false:error
 csharp_style_expression_bodied_operators = false:error
 csharp_style_expression_bodied_accessors = false:error
-csharp_style_expression_bodied_lambdas = false:warning
+csharp_style_expression_bodied_lambdas = true:error
 
 # Immer Braces bei if/else/for/while
 csharp_prefer_braces = true:error

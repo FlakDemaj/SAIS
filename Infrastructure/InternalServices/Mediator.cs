@@ -50,8 +50,7 @@ public class Mediator : IMediator
             .Reverse()
             .ToList();
 
-        var next = () =>
-            (Task<TResponse>)method!.Invoke(handler, [request, authentication, cancellationToken])!;
+        var next = () => (Task<TResponse>)method!.Invoke(handler, [request, authentication, cancellationToken])!;
 
         // Pipelines von innen nach außen verketten
         foreach (var pipeline in pipelines)
@@ -61,7 +60,7 @@ public class Mediator : IMediator
             var currentPipeline = pipeline;
 
             next = () => (Task<TResponse>)pipelineMethod!
-                .Invoke(currentPipeline, [request, currentNext, cancellationToken])!;
+                                .Invoke(currentPipeline, [request, currentNext, cancellationToken])!;
         }
 
         return await next();
