@@ -1,5 +1,6 @@
 using Application.Common.Authentication;
 using Application.Common.Base;
+using Application.Common.DTOs.Base;
 using Application.Common.DTOs.Public.Users;
 using Application.Common.Interfaces.Repositorys;
 using Application.Utils.Logger;
@@ -16,7 +17,7 @@ namespace Application.Public.Users.Commands.CreateUser;
 
 public class CreateUserCommandHandler :
     BaseHandler<CreateUserCommand>,
-    IRequestHandler<CreateUserCommand, CreateUserResponseDto>
+    IRequestHandler<CreateUserCommand, CreateObjectResponseDto>
 {
 
     private readonly IUserRepository _userRepository;
@@ -30,7 +31,7 @@ public class CreateUserCommandHandler :
         _userRepository = userRepository;
     }
 
-    public async Task<CreateUserResponseDto> HandleAsync(
+    public async Task<CreateObjectResponseDto> HandleAsync(
         CreateUserCommand request,
         IAuthentication? authentication = null,
         CancellationToken cancellationToken = default)
@@ -46,10 +47,10 @@ public class CreateUserCommandHandler :
 
         var createdUser = await _userRepository.CreateAsync(user);
 
-        return new CreateUserResponseDto
+        return new CreateObjectResponseDto
         {
             Success = true,
-            UserGuid = createdUser.Guid
+            ObjectGuid = createdUser.Guid
         };
     }
 

@@ -1,3 +1,4 @@
+using Application.Common.DTOs.Base;
 using Application.Common.DTOs.Public.Users;
 using Application.Public.Users.Commands.CreateUser;
 using Application.Public.Users.Querys.GetUser;
@@ -52,7 +53,7 @@ public class UserController : BaseRestController
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateUserResponseDto>> CreateUserAsync(
+    public async Task<ActionResult<CreateObjectResponseDto>> CreateUserAsync(
         [FromBody] CreateUserCommand createUserCommand,
         CancellationToken cancellationToken)
     {

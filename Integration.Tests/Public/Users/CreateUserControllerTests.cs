@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 
-using Application.Common.DTOs.Public.Users;
+using Application.Common.DTOs.Base;
 using Application.Public.Users;
 using Application.Public.Users.Commands.CreateUser;
 
@@ -44,9 +44,9 @@ public class CreateUserControllerTests : TestBase
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await DeserializeResponseAsync<CreateUserResponseDto>(response);
+        var result = await DeserializeResponseAsync<CreateObjectResponseDto>(response);
         result!.Success.Should().BeTrue();
-        result.UserGuid.Should().NotBeEmpty();
+        result.ObjectGuid.Should().NotBeEmpty();
     }
 
     [Fact]

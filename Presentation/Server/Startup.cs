@@ -99,7 +99,8 @@ public static class Startup
     {
         builder.WebHost.UseSentry(options =>
         {
-            options.Dsn = !builder.Environment.IsProduction() ? "" : builder.Configuration["Sentry:Dsn"];
+            options.Dsn = !builder.Environment.IsProduction() ? ""
+                : builder.Configuration["Sentry:Dsn"];
             options.Debug = false;
             options.TracesSampleRate = 0.10;
             options.MinimumEventLevel = LogLevel.Warning;
@@ -135,7 +136,7 @@ public static class Startup
 
         app.UseHttpsRedirection();
         app.UseSentryTracing();
-        app.UseCors("AllowOrigin");
+        app.UseCors("AllowLocalhost");
         app.UseAuthentication();
         app.UseAuthorization();
         EnableMiddlewares(app);
@@ -144,10 +145,22 @@ public static class Startup
 
     private static void EnableCors(IServiceCollection service)
     {
-        service.AddCors(option => option.AddPolicy("AllowOrigin",
-                policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()));
+        service.AddCors(options =>
+        {
+            options.AddPolicy("AllowLocalhost",
+                policy =>
+                {
+                    policy.WithOrigins(
+                            "http://localhost:5165",
+                            "https://localhost:7287",
+                            "http://localhost:56679",
+                            "https://localhost:44339",
+                            "http://localhost:3000" // falls Frontend
+                        )
+                        .WithMethods("GET", "POST", "PUT", "DELETE")
+                        .AllowAnyHeader();
+                });
+        });
     }
 
     private static void EnableMiddlewares(IApplicationBuilder builder)
