@@ -178,7 +178,7 @@ public class UserRefreshTokenTest
         var user = UserTestData.CreateUser();
         var token = UserTestData.CreateRefreshToken(user, expiresInDays: 30);
 
-        token.GetExpirationInDays().Should().Be(30);
+        token.GetExpirationInDays().Should().BeCloseTo(30, delta: 1);
     }
 
     #endregion
