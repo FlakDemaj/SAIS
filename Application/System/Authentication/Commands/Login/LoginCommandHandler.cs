@@ -20,8 +20,8 @@ using SLAIS.Domain.Users;
 
 namespace Application.System.Authentication.Commands.Login;
 
-public class LoginCommandHandlerUser :
-    BaseHandler<LoginCommandHandlerUser>,
+public class LoginCommandHandler :
+    BaseHandler<LoginCommandHandler>,
     IRequestHandler<LoginCommand, GeneratedTokenResult>
 {
     private readonly IUserRepository _userRepository;
@@ -31,11 +31,11 @@ public class LoginCommandHandlerUser :
     private readonly CommonOptions _commonOptions;
 
 
-    public LoginCommandHandlerUser(
+    public LoginCommandHandler(
         IUserRepository userRepository,
         IOptions<RefreshTokenOptions> refreshTokenOptions,
         ITokenService tokenService,
-        ISlaisLogger<LoginCommandHandlerUser> logger,
+        ISlaisLogger<LoginCommandHandler> logger,
         IMapper mapper,
         IPasswordHasher passwordHasher,
         IOptions<CommonOptions> commonOptions)

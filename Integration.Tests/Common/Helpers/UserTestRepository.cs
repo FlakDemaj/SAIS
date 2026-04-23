@@ -2,6 +2,7 @@ using System.Net;
 
 using Application.Common.Interfaces.Services;
 
+using Domain.Common.Enums;
 using Domain.System.RefreshToken;
 
 using Infrastructure.Persistence.Context;
@@ -10,6 +11,8 @@ using Infrastructure.Repositorys;
 using Microsoft.EntityFrameworkCore;
 
 using SLAIS.Domain.Users;
+
+using Tests.Domain.Shared.Builders;
 
 namespace Integration.Tests.Common.Helpers;
 
@@ -27,52 +30,87 @@ public class UserTestRepository
         UserRepository = new UserRepository(dbContext);
     }
 
+    private async Task<UserEntity> SaveUserAsync(UserEntity user)
+    {
+        user = await UserRepository.CreateAsync(user);
+        await _dbContext.SaveChangesAsync();
+        return user;
+    }
+
     public async Task<UserEntity> CreateAdminAsync(
         Guid instituteGuid,
         Guid? createdByUserGuid = null,
         string? email = null,
         string? username = null,
         string? firstName = null,
-        string? lastName = null)
+        string? lastName = null,
+        States state = States.Active,
+        bool isBlocked = false,
+        string? password = null)
     {
-        var user = UserEntity.CreateAdmin(
-            createdByUserGuid,
-            email ?? $"{Guid.CreateVersion7()}@test.com",
-            username ?? Guid.CreateVersion7().ToString(),
-            firstName ?? "Max",
-            lastName ?? "Mustermann",
-            instituteGuid);
+        var builder = new UserEntityBuilder()
+            .WithInstituteGuid(instituteGuid)
+            .WithRole(Roles.Admin)
+            .WithEmail(email ?? $"{Guid.CreateVersion7()}@test.com")
+            .WithUsername(username ?? Guid.CreateVersion7().ToString())
+            .WithFirstName(firstName ?? "Max")
+            .WithLastName(lastName ?? "Mustermann")
+            .WithState(state);
 
-        user = await UserRepository.CreateAsync(user);
-        await _dbContext.SaveChangesAsync();
+        if (createdByUserGuid.HasValue)
+        {
+            builder.WithCreatedBy(createdByUserGuid.Value);
+        }
 
-        return user;
+        if (isBlocked)
+        {
+            builder.Blocked();
+        }
+
+        if (password is not null)
+        {
+            builder.WithHashedPassword(_passwordHasher.Hash(password));
+        }
+
+        return await SaveUserAsync(builder.Build());
     }
 
-    public async Task<UserEntity> CreateAdminWithPasswordAsync(
+    public async Task<UserEntity> CreateSuperAdminAsync(
         Guid instituteGuid,
-        string rawPassword,
         Guid? createdByUserGuid = null,
         string? email = null,
         string? username = null,
         string? firstName = null,
-        string? lastName = null)
+        string? lastName = null,
+        States state = States.Active,
+        bool isBlocked = false,
+        string? password = null)
     {
-        var user = UserEntity.CreateAdmin(
-            createdByUserGuid,
-            email ?? $"{Guid.CreateVersion7()}@test.com",
-            username ?? Guid.CreateVersion7().ToString(),
-            firstName ?? "Max",
-            lastName ?? "Mustermann",
-            instituteGuid);
+        var builder = new UserEntityBuilder()
+            .WithInstituteGuid(instituteGuid)
+            .WithRole(Roles.SuperAdmin)
+            .WithEmail(email ?? $"{Guid.CreateVersion7()}@test.com")
+            .WithUsername(username ?? Guid.CreateVersion7().ToString())
+            .WithFirstName(firstName ?? "Max")
+            .WithLastName(lastName ?? "Mustermann")
+            .WithState(state);
 
-        user.SetPassword(_passwordHasher.Hash(rawPassword));
+        if (createdByUserGuid.HasValue)
+        {
+            builder.WithCreatedBy(createdByUserGuid.Value);
+        }
 
-        user = await UserRepository.CreateAsync(user);
-        await _dbContext.SaveChangesAsync();
-        await ActivateUserAsync(user.Guid);
+        if (isBlocked)
+        {
+            builder.Blocked();
+        }
 
-        return user;
+        if (password is not null)
+        {
+            builder.WithHashedPassword(_passwordHasher.Hash(password));
+        }
+
+        return await SaveUserAsync(builder.Build());
     }
 
     public async Task<UserEntity> CreateTeacherAsync(
@@ -81,20 +119,36 @@ public class UserTestRepository
         string? email = null,
         string? username = null,
         string? firstName = null,
-        string? lastName = null)
+        string? lastName = null,
+        States state = States.Active,
+        bool isBlocked = false,
+        string? password = null)
     {
-        var user = UserEntity.CreateTeacher(
-            createdByUserGuid,
-            email ?? $"{Guid.CreateVersion7()}@test.com",
-            username ?? Guid.CreateVersion7().ToString(),
-            firstName ?? "Max",
-            lastName ?? "Mustermann",
-            instituteGuid);
+        var builder = new UserEntityBuilder()
+            .WithInstituteGuid(instituteGuid)
+            .WithRole(Roles.Teacher)
+            .WithEmail(email ?? $"{Guid.CreateVersion7()}@test.com")
+            .WithUsername(username ?? Guid.CreateVersion7().ToString())
+            .WithFirstName(firstName ?? "Max")
+            .WithLastName(lastName ?? "Mustermann")
+            .WithState(state);
 
-        user = await UserRepository.CreateAsync(user);
-        await _dbContext.SaveChangesAsync();
+        if (createdByUserGuid.HasValue)
+        {
+            builder.WithCreatedBy(createdByUserGuid.Value);
+        }
 
-        return user;
+        if (isBlocked)
+        {
+            builder.Blocked();
+        }
+
+        if (password is not null)
+        {
+            builder.WithHashedPassword(_passwordHasher.Hash(password));
+        }
+
+        return await SaveUserAsync(builder.Build());
     }
 
     public async Task<UserEntity> CreateStudentAsync(
@@ -103,20 +157,36 @@ public class UserTestRepository
         string? email = null,
         string? username = null,
         string? firstName = null,
-        string? lastName = null)
+        string? lastName = null,
+        States state = States.Active,
+        bool isBlocked = false,
+        string? password = null)
     {
-        var user = UserEntity.CreateStudent(
-            createdByUserGuid,
-            email ?? $"{Guid.CreateVersion7()}@test.com",
-            username ?? Guid.CreateVersion7().ToString(),
-            firstName ?? "Max",
-            lastName ?? "Mustermann",
-            instituteGuid);
+        var builder = new UserEntityBuilder()
+            .WithInstituteGuid(instituteGuid)
+            .WithRole(Roles.Student)
+            .WithEmail(email ?? $"{Guid.CreateVersion7()}@test.com")
+            .WithUsername(username ?? Guid.CreateVersion7().ToString())
+            .WithFirstName(firstName ?? "Max")
+            .WithLastName(lastName ?? "Mustermann")
+            .WithState(state);
 
-        user = await UserRepository.CreateAsync(user);
-        await _dbContext.SaveChangesAsync();
+        if (createdByUserGuid.HasValue)
+        {
+            builder.WithCreatedBy(createdByUserGuid.Value);
+        }
 
-        return user;
+        if (isBlocked)
+        {
+            builder.Blocked();
+        }
+
+        if (password is not null)
+        {
+            builder.WithHashedPassword(_passwordHasher.Hash(password));
+        }
+
+        return await SaveUserAsync(builder.Build());
     }
 
     public async Task<RefreshTokenEntity> CreateRefreshTokenForUserAsync(
@@ -126,14 +196,28 @@ public class UserTestRepository
         Guid? deviceGuid = null,
         string? deviceName = null)
     {
-        var refreshToken = user.CreateRefreshToken(
+        var refreshToken = RefreshTokenEntityBuilder.CreateValid(
+            user,
             expiresInDays ?? 7,
-            deviceGuid ?? Guid.CreateVersion7(),
-            deviceName ?? "Test Device",
-            ipAddress ?? IPAddress.Loopback);
+            deviceGuid,
+            deviceName);
 
         await _dbContext.SaveChangesAsync();
 
+        return refreshToken;
+    }
+
+    public async Task<RefreshTokenEntity> CreateExpiredRefreshTokenForUserAsync(UserEntity user)
+    {
+        var refreshToken = RefreshTokenEntityBuilder.CreateExpired(user);
+        await _dbContext.SaveChangesAsync();
+        return refreshToken;
+    }
+
+    public async Task<RefreshTokenEntity> CreateRevokedRefreshTokenForUserAsync(UserEntity user)
+    {
+        var refreshToken = RefreshTokenEntityBuilder.CreateRevoked(user);
+        await _dbContext.SaveChangesAsync();
         return refreshToken;
     }
 
@@ -142,11 +226,5 @@ public class UserTestRepository
         return await _dbContext
             .GetNoTrackingSet<RefreshTokenEntity>()
             .FirstOrDefaultAsync(rt => rt.UserGuid == userGuid);
-    }
-
-    private async Task ActivateUserAsync(Guid userGuid)
-    {
-        await _dbContext.Database.ExecuteSqlAsync(
-            $"UPDATE \"public\".\"users\" SET \"state\" = 0 WHERE \"user_guid\" = {userGuid}");
     }
 }

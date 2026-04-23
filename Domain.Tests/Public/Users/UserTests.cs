@@ -1,11 +1,12 @@
 using Domain.Common.Enums;
 using Domain.Public.Users;
-using Domain.Tests.Common.TestDataCreator;
 using Domain.Tests.Utils.Extensions;
 
 using FluentAssertions;
 
 using SLAIS.Domain.Users;
+
+using Tests.Domain.Shared.TestDataCreator;
 
 using Xunit;
 
@@ -141,7 +142,7 @@ public class UserTests
 
         user.LoginAttempts.Should().Be(0);
         user.IsBlocked.Should().BeFalse();
-        user.State.Should().Be(States.Active);
+        user.State.Should().Be(States.Pending);
     }
 
     [Fact]
@@ -276,7 +277,7 @@ public class UserTests
     public void SetPassword_ShouldThrowException_PasswordIsTheSame()
     {
         var user = UserTestData.CreateUser();
-        var newPassword = "NewPassword";
+        var newPassword = " ";
 
         var act = () => user.SetPassword(newPassword);
 

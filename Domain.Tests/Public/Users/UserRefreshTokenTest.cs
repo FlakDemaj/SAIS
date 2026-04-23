@@ -2,10 +2,11 @@ using System.Net;
 
 using Domain.Public.Users;
 using Domain.Systems.RefreshToken;
-using Domain.Tests.Common.TestDataCreator;
 using Domain.Tests.Utils.Extensions;
 
 using FluentAssertions;
+
+using Tests.Domain.Shared.TestDataCreator;
 
 using Xunit;
 

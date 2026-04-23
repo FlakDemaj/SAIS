@@ -17,6 +17,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
+using SLAIS.Domain.Users;
+
 using Xunit;
 
 namespace Integration.Tests.Common;
@@ -69,17 +71,11 @@ public abstract class TestBase : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    protected void AuthenticateAs(Roles role, Guid userGuid, Guid instituteGuid)
+    protected void AuthenticateAs(UserEntity user)
     {
-        var token = GenerateTestToken(role, userGuid, instituteGuid);
+        var token = GenerateTestToken(user.Role, user.Guid, user.InstituteGuid);
         _client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", token);
-    }
-
-    protected static StringContent BuildJsonContent(object payload)
-    {
-        var json = JsonSerializer.Serialize(payload);
-        return new StringContent(json, Encoding.UTF8, "application/json");
     }
 
     protected static async Task<T?> DeserializeResponseAsync<T>(HttpResponseMessage response)

@@ -1,45 +1,15 @@
 using System.Net;
 using System.Reflection;
 
-using Domain.Common.Enums;
 using Domain.System.RefreshToken;
 
 using SLAIS.Domain.Users;
 
-namespace Domain.Tests.Common.TestDataCreator;
+namespace Tests.Domain.Shared.Builders;
 
-public static class UserTestData
+public static class RefreshTokenEntityBuilder
 {
-    public static UserEntity CreateUser(Roles roles = Roles.Admin)
-    {
-        var user = UserEntity.CreateAdmin(
-            null,
-            "test@test.com",
-            "testuser",
-            "Max",
-            "Mustermann",
-            Guid.CreateVersion7());
-
-        SetProperty(user, "State", States.Active);
-
-        return user;
-    }
-
-    public static UserEntity CreateBlockedUser()
-    {
-        var user = CreateUser();
-        SetProperty(user, "IsBlocked", true);
-        return user;
-    }
-
-    public static UserEntity CreateUserWithLoginAttempts(int count)
-    {
-        var user = CreateUser();
-        SetProperty(user, "LoginAttempts", (short)count);
-        return user;
-    }
-
-    public static RefreshTokenEntity CreateRefreshToken(
+    public static RefreshTokenEntity CreateValid(
         UserEntity user,
         int expiresInDays = 7,
         Guid? deviceGuid = null,
@@ -52,7 +22,7 @@ public static class UserTestData
             IPAddress.Loopback);
     }
 
-    public static RefreshTokenEntity CreateExpiredRefreshToken(UserEntity user)
+    public static RefreshTokenEntity CreateExpired(UserEntity user)
     {
         var token = user.CreateRefreshToken(
             1,
@@ -65,7 +35,7 @@ public static class UserTestData
         return token;
     }
 
-    public static RefreshTokenEntity CreateRevokedRefreshToken(UserEntity user)
+    public static RefreshTokenEntity CreateRevoked(UserEntity user)
     {
         var token = user.CreateRefreshToken(
             7,
@@ -81,8 +51,8 @@ public static class UserTestData
 
     private static void SetProperty<T>(T obj, string propertyName, object? value) where T : class
     {
-        var type = obj.GetType();
-        var prop = type.GetProperty(propertyName,
+        var prop = obj.GetType().GetProperty(
+            propertyName,
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
         prop?.SetValue(obj, value);
