@@ -110,8 +110,8 @@ jobs:
           path: ${{ steps.domain-coverage-path.outputs.path }}
           if-no-files-found: warn
 
-  application-tests:
-    name: Application Tests
+  integration-tests:
+    name: Integration Tests
     runs-on: ubuntu-latest
     needs: build
     permissions:
@@ -124,121 +124,39 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - run: dotnet restore
-      - name: Run Application Tests
-        run: |
-          dotnet test Application.Tests/Application.Tests.csproj \
-            --configuration Release \
-            --logger "trx;LogFileName=Application.TestResults.trx" \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./TestResults \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-      - name: Find Coverage File
-        if: always()
-        id: application-coverage-path
-        run: |
-          FILE=$(find ./TestResults -name "coverage.opencover.xml" | head -1)
-          echo "path=$FILE" >> $GITHUB_OUTPUT
-      - uses: dorny/test-reporter@3eeb9fc888e82e8be2fb356bbeec2750231672bc # v1
-        if: always()
-        with:
-          name: Application Test Results
-          path: './TestResults/Application.TestResults.trx'
-          reporter: dotnet-trx
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: application-coverage
-          path: ${{ steps.application-coverage-path.outputs.path }}
-          if-no-files-found: warn
-
-  infrastructure-tests:
-    name: Infrastructure Tests
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      contents: read
-      checks: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - run: dotnet restore
-      - name: Run Infrastructure Tests
+      - name: Run Integration Tests
         env:
           TESTCONTAINERS_RYUK_DISABLED: true
         run: |
-          dotnet test Infrastructure.Tests/Infrastructure.Tests.csproj \
+          dotnet test Integration.Tests/Integration.Tests.csproj \
             --configuration Release \
-            --logger "trx;LogFileName=Infrastructure.TestResults.trx" \
+            --logger "trx;LogFileName=Integration.TestResults.trx" \
             --collect:"XPlat Code Coverage" \
             --results-directory ./TestResults \
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
       - name: Find Coverage File
         if: always()
-        id: infrastructure-coverage-path
+        id: integration-coverage-path
         run: |
           FILE=$(find ./TestResults -name "coverage.opencover.xml" | head -1)
           echo "path=$FILE" >> $GITHUB_OUTPUT
       - uses: dorny/test-reporter@3eeb9fc888e82e8be2fb356bbeec2750231672bc # v1
         if: always()
         with:
-          name: Infrastructure Test Results
-          path: './TestResults/Infrastructure.TestResults.trx'
+          name: Integration Test Results
+          path: './TestResults/Integration.TestResults.trx'
           reporter: dotnet-trx
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
-          name: infrastructure-coverage
-          path: ${{ steps.infrastructure-coverage-path.outputs.path }}
-          if-no-files-found: warn
-
-  presentation-tests:
-    name: Presentation Tests
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      contents: read
-      checks: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - run: dotnet restore
-      - name: Run Presentation Tests
-        run: |
-          dotnet test Presentation.Tests/Presentation.Tests.csproj \
-            --configuration Release \
-            --logger "trx;LogFileName=Presentation.TestResults.trx" \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./TestResults \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-      - name: Find Coverage File
-        if: always()
-        id: presentation-coverage-path
-        run: |
-          FILE=$(find ./TestResults -name "coverage.opencover.xml" | head -1)
-          echo "path=$FILE" >> $GITHUB_OUTPUT
-      - uses: dorny/test-reporter@3eeb9fc888e82e8be2fb356bbeec2750231672bc # v1
-        if: always()
-        with:
-          name: Presentation Test Results
-          path: './TestResults/Presentation.TestResults.trx'
-          reporter: dotnet-trx
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: presentation-coverage
-          path: ${{ steps.presentation-coverage-path.outputs.path }}
+          name: integration-coverage
+          path: ${{ steps.integration-coverage-path.outputs.path }}
           if-no-files-found: warn
 
   sonarqube:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
-    needs: [ build, architecture-tests, domain-tests, application-tests, infrastructure-tests, presentation-tests ]
+    needs: [ build, architecture-tests, domain-tests, integration-tests ]
     permissions:
       contents: read
     steps:
@@ -265,25 +183,11 @@ jobs:
           path: ./coverage/domain
         continue-on-error: true
 
-      - name: Download Application Coverage
+      - name: Download Integration Coverage
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: application-coverage
-          path: ./coverage/application
-        continue-on-error: true
-
-      - name: Download Infrastructure Coverage
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
-        with:
-          name: infrastructure-coverage
-          path: ./coverage/infrastructure
-        continue-on-error: true
-
-      - name: Download Presentation Coverage
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
-        with:
-          name: presentation-coverage
-          path: ./coverage/presentation
+          name: integration-coverage
+          path: ./coverage/integration
         continue-on-error: true
 
       - name: Install SonarScanner
