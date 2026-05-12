@@ -18,6 +18,7 @@ public class GuidResolverPipeline<TRequest, TResponse>
         Func<Task<TResponse>> next,
         CancellationToken cancellationToken)
     {
+
         if (request is not IHasGuid hasGuid
             || hasGuid.Guid != System.Guid.Empty)
         {

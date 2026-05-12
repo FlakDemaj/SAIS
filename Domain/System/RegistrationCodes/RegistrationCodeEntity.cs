@@ -44,5 +44,4 @@ public class RegistrationCodeEntity : RegistrationCodeNavigationProperty
         return (value % 900000 + 100000).ToString();
     }
 
-
 }

@@ -15,7 +15,7 @@ public class RegistrationCodeEntityAttributesConfig : BaseGuidEntityConfig<Regis
     {
         Table = "registration_codes";
         _schema = "system";
-        _prefix = "refresh_token_";
+        _prefix = "registration_code_";
     }
 
     public override void Configure(EntityTypeBuilder<RegistrationCodeEntity> builder)
@@ -37,6 +37,11 @@ public class RegistrationCodeEntityAttributesConfig : BaseGuidEntityConfig<Regis
         builder
             .Property(rc => rc.CreatedAt)
             .HasColumnName("created_at")
+            .IsRequired();
+
+        builder
+            .Property(rt => rt.UserGuid)
+            .HasColumnName("fk_user_guid")
             .IsRequired();
 
         builder.AddForeignKeys();

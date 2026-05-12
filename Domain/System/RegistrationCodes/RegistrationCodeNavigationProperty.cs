@@ -1,3 +1,4 @@
+using Domain.Base;
 using Domain.Public.Users;
 
 using SLAIS.Domain.Commom;

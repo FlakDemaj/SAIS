@@ -1,3 +1,5 @@
+using Domain.Base;
+
 using SLAIS.Domain.Commom;
 
 namespace Application.Common.Interfaces.Repositorys;

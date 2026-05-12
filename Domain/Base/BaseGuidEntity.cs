@@ -1,4 +1,4 @@
-namespace SLAIS.Domain.Commom;
+namespace Domain.Base;
 
 public abstract class BaseGuidEntity
 {

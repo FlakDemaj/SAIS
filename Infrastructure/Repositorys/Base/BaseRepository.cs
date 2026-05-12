@@ -1,5 +1,7 @@
 using Application.Common.Interfaces.Repositorys;
 
+using Domain.Base;
+
 using Infrastructure.Persistence.Context;
 
 using SLAIS.Domain.Commom;

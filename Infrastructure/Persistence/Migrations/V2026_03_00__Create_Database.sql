@@ -91,7 +91,7 @@ create index if not exists idx_users_institute_guid
 
 create table if not exists system.registration_codes
 (
-    registration_code_uuid  uuid            primary key default gen_random_uuid(),
+    registration_code_guid  uuid            primary key default gen_random_uuid(),
     registration_code       text            not null,
     revoked                 bool            not null,
     created_at              timestamptz     not null default now(),
