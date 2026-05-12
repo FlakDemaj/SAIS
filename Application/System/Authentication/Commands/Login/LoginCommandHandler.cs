@@ -13,10 +13,9 @@ using Application.Utils.Mediator.Interfaces;
 using AutoMapper;
 
 using Domain.Common.Exceptions;
+using Domain.Public.Users;
 
 using Microsoft.Extensions.Options;
-
-using SLAIS.Domain.Users;
 
 namespace Application.System.Authentication.Commands.Login;
 

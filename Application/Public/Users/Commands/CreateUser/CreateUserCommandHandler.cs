@@ -9,8 +9,7 @@ using AutoMapper;
 
 using Domain.Common.Enums;
 using Domain.Common.Exceptions;
-
-using SLAIS.Domain.Users;
+using Domain.Public.Users;
 
 namespace Application.Public.Users.Commands.CreateUser;
 
@@ -44,6 +43,8 @@ public class CreateUserCommandHandler :
             authentication.UserGuid,
             authentication.InstitutionGuid);
 
+        user.CreateRegistrationCode();
+
         var createdUser = await _userRepository.CreateAsync(user);
 
         return new CreateObjectResponseDto
@@ -58,6 +59,13 @@ public class CreateUserCommandHandler :
         Guid creatorGuid,
         Guid instituteGuid)
     {
+        var userByEmail = await _userRepository
+            .GetUserByUsernameOrEmailWithRefreshTokenAsync(request.Email);
+
+        if (userByEmail != null)
+        {
+            throw new SlaisException(UserErrorCodes.UserWithThisEmailAlreadyExists);
+        }
 
         var username = await CreateUsername(
             request.Firstname,

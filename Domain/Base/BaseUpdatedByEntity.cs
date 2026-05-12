@@ -1,6 +1,5 @@
 using Domain.Base;
-
-using SLAIS.Domain.Users;
+using Domain.Public.Users;
 
 namespace SLAIS.Domain.Commom;
 

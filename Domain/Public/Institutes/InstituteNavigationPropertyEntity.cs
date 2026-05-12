@@ -1,5 +1,6 @@
+using Domain.Public.Users;
+
 using SLAIS.Domain.Commom;
-using SLAIS.Domain.Users;
 
 namespace Domain.Institutes;
 

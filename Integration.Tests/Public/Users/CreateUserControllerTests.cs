@@ -136,6 +136,36 @@ public class CreateUserControllerTests : TestBase
 
     #endregion
 
+    #region CreateUser - User Already Exists
+
+
+    [Fact]
+    public async Task CreateUser_EmailAlreadyExists_ShouldReturnBadRequest()
+    {
+        var institute = await _instituteRepo.CreateInstituteAsync();
+        await _userRepo.CreateAdminAsync(institute.Guid, email: "test@test.de");
+        var superAdmin = await _userRepo.CreateSuperAdminAsync(institute.Guid);
+
+        AuthenticateAs(superAdmin);
+
+        var command = new CreateUserCommand
+        {
+            Email = "test@test.de",
+            Firstname = "Another",
+            Lastname = "Admin",
+            Role = Roles.Admin
+        };
+
+        var response = await _client.PostAsJsonAsync(Routings.RestUserRouting, command);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var error = await DeserializeResponseAsync<ErrorResponseDto>(response);
+        error!.ErrorCode.Should().Be((int)UserErrorCodes.UserWithThisEmailAlreadyExists);
+    }
+
+    #endregion
+
     #region CreateUser – authorization checks (Forbidden)
 
     [Fact]

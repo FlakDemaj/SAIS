@@ -1,12 +1,12 @@
+using Domain.Public.Users;
+
 using Infrastructure.Persistence.EntityConfigurations.Base;
 using Infrastructure.Persistence.EntityConfigurations.Entitys.UserEntityConfig;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using SLAIS.Domain.Users;
-
-namespace Infrastructure.Persistence.EntityConfigurations.Entitys;
+namespace Infrastructure.Persistence.EntityConfigurations.Entitys.Public.UserEntityConfig;
 
 internal sealed class UserEntityAttributeConfig : BaseIdEntityConfig<UserEntity>
 {

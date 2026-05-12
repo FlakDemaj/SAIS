@@ -1,7 +1,7 @@
 using System.Net;
 
 using Domain.Public.Users;
-using Domain.Systems.RefreshToken;
+using Domain.System.RefreshToken;
 using Domain.Tests.Utils.Extensions;
 
 using FluentAssertions;

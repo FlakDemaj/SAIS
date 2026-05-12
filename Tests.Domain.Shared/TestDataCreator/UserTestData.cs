@@ -1,7 +1,6 @@
 using Domain.Common.Enums;
+using Domain.Public.Users;
 using Domain.System.RefreshToken;
-
-using SLAIS.Domain.Users;
 
 using Tests.Domain.Shared.Builders;
 

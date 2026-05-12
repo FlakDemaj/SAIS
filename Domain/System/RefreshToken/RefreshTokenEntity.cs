@@ -1,7 +1,6 @@
 using System.Net;
 
 using Domain.Common.Exceptions;
-using Domain.Systems.RefreshToken;
 
 namespace Domain.System.RefreshToken;
 

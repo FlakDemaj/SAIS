@@ -1,8 +1,7 @@
 using System.Reflection;
 
 using Domain.Common.Enums;
-
-using SLAIS.Domain.Users;
+using Domain.Public.Users;
 
 namespace Tests.Domain.Shared.Builders;
 

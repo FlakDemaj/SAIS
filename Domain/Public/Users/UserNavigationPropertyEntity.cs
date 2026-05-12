@@ -1,8 +1,8 @@
 using Domain.Institutes;
 using Domain.System.RefreshToken;
+using Domain.System.RegistrationCodes;
 
 using SLAIS.Domain.Commom;
-using SLAIS.Domain.Users;
 
 namespace Domain.Public.Users;
 
@@ -30,6 +30,9 @@ public abstract class UserNavigationPropertyEntity : BaseIdEntity
 
     //Navigation Property for refresh tokens
     public ICollection<RefreshTokenEntity> RefreshTokens { get; private set; } = new List<RefreshTokenEntity>();
+
+    //Navigation Property for registrationCodes
+    public ICollection<RegistrationCodeEntity> RegistrationCodes { get; private set; } = new List<RegistrationCodeEntity>();
 
     // Navigation Property for created Users
     protected UserNavigationPropertyEntity(

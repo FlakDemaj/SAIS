@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Domain.Systems.RefreshToken;
+namespace Domain.System.RefreshToken;
 
 public enum RefreshTokenErrorCodes
 {

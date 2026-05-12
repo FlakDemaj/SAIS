@@ -1,7 +1,7 @@
+using Domain.Public.Users;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-
-using SLAIS.Domain.Users;
 
 namespace Application;
 

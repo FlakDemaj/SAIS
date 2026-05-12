@@ -1,13 +1,12 @@
 using Application.Common.Interfaces.Repositorys;
 
 using Domain.Common.Enums;
+using Domain.Public.Users;
 
 using Infrastructure.Persistence.Context;
 using Infrastructure.Repositorys.Base;
 
 using Microsoft.EntityFrameworkCore;
-
-using SLAIS.Domain.Users;
 
 namespace Infrastructure.Repositorys;
 

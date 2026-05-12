@@ -11,7 +11,7 @@ using Domain.Common.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Presentation.Controllers;
+namespace Presentation.Controllers.System.Authentication;
 
 public class AuthenticationController : BaseRestController
 {

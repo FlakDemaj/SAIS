@@ -3,14 +3,13 @@ using System.Net;
 using Application.Common.Interfaces.Services;
 
 using Domain.Common.Enums;
+using Domain.Public.Users;
 using Domain.System.RefreshToken;
 
 using Infrastructure.Persistence.Context;
 using Infrastructure.Repositorys;
 
 using Microsoft.EntityFrameworkCore;
-
-using SLAIS.Domain.Users;
 
 using Tests.Domain.Shared.Builders;
 

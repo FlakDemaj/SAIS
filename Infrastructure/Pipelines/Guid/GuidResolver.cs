@@ -1,13 +1,12 @@
 using Application.Common;
 
 using Domain.Common.Exceptions;
+using Domain.Public.Users;
 
 using Infrastructure.Persistence.Context;
 using Infrastructure.Repositorys;
 
 using Microsoft.EntityFrameworkCore;
-
-using SLAIS.Domain.Users;
 
 namespace Infrastructure.Pipelines.Guid;
 

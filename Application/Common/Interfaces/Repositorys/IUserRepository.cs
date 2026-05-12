@@ -1,6 +1,5 @@
 using Domain.Common.Enums;
-
-using SLAIS.Domain.Users;
+using Domain.Public.Users;
 
 namespace Application.Common.Interfaces.Repositorys;
 

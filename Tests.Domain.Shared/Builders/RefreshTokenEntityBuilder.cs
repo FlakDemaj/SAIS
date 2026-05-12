@@ -1,9 +1,8 @@
 using System.Net;
 using System.Reflection;
 
+using Domain.Public.Users;
 using Domain.System.RefreshToken;
-
-using SLAIS.Domain.Users;
 
 namespace Tests.Domain.Shared.Builders;
 

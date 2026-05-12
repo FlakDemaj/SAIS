@@ -1,7 +1,7 @@
+using Domain.Public.Users;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-using SLAIS.Domain.Users;
 
 namespace Infrastructure.Persistence.EntityConfigurations.Entitys.UserEntityConfig;
 

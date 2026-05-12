@@ -7,6 +7,7 @@ using System.Text.Json;
 using Application.Common.Interfaces.Services;
 
 using Domain.Common.Enums;
+using Domain.Public.Users;
 
 using Infrastructure.Persistence.Context;
 
@@ -16,8 +17,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-
-using SLAIS.Domain.Users;
 
 using Xunit;
 

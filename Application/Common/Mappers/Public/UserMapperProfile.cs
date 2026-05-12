@@ -3,7 +3,7 @@ using Application.Common.DTOs.Public.Users;
 
 using AutoMapper;
 
-using SLAIS.Domain.Users;
+using Domain.Public.Users;
 
 namespace Application.Common.Mappers.Public;
 

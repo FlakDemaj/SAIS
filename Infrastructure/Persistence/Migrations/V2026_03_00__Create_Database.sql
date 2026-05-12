@@ -89,6 +89,23 @@ create table if not exists public.users
 create index if not exists idx_users_institute_guid
     on public.users(fk_institute_guid);
 
+create table if not exists system.registration_codes
+(
+    registration_code_uuid  uuid            primary key default gen_random_uuid(),
+    registration_code       text            not null,
+    revoked                 bool            not null,
+    created_at              timestamptz     not null default now(),
+    fk_user_guid            uuid            not null,
+
+    constraint fk_registration_code_user
+    foreign key (fk_user_guid)
+    references public.users(user_guid)
+    on delete cascade
+    );
+
+create index if not exists idx_registration_code_user
+    on system.registration_codes(fk_user_guid);
+
 create table if not exists system.user_settings
 (
     user_setting_guid   uuid        primary key default gen_random_uuid(),

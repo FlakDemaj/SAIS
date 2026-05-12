@@ -4,8 +4,6 @@ using Domain.Tests.Utils.Extensions;
 
 using FluentAssertions;
 
-using SLAIS.Domain.Users;
-
 using Tests.Domain.Shared.TestDataCreator;
 
 using Xunit;

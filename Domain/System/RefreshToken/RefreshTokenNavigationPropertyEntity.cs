@@ -1,7 +1,8 @@
-using SLAIS.Domain.Commom;
-using SLAIS.Domain.Users;
+using Domain.Public.Users;
 
-namespace Domain.Systems.RefreshToken;
+using SLAIS.Domain.Commom;
+
+namespace Domain.System.RefreshToken;
 
 public abstract class RefreshTokenNavigationPropertyEntity : BaseGuidEntity
 {

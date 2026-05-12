@@ -2,10 +2,10 @@ using System.Net;
 
 using Domain.Common.Enums;
 using Domain.Common.Exceptions;
-using Domain.Public.Users;
 using Domain.System.RefreshToken;
+using Domain.System.RegistrationCodes;
 
-namespace SLAIS.Domain.Users;
+namespace Domain.Public.Users;
 
 public class UserEntity : UserNavigationPropertyEntity
 {
@@ -50,6 +50,8 @@ public class UserEntity : UserNavigationPropertyEntity
         State = States.Pending;
         InstituteGuid = instituteGuid;
     }
+
+    #region Create User
 
     public static UserEntity CreateAdmin(
         Guid? createdByUserGuid,
@@ -151,17 +153,10 @@ public class UserEntity : UserNavigationPropertyEntity
         );
     }
 
-    public void IncrementWrongLoginAttempts(int maxLoginAttempts = 5)
-    {
-        CheckUser();
 
-        LoginAttempts++;
+    #endregion
 
-        if (LoginAttempts == maxLoginAttempts)
-        {
-            IsBlocked = true;
-        }
-    }
+    #region Setter
 
     public void SetLoginAttemptsToZero()
     {
@@ -178,6 +173,48 @@ public class UserEntity : UserNavigationPropertyEntity
 
         HashedPassword = hashedPassword;
     }
+
+    #endregion
+
+    #region Login
+
+    public void IncrementWrongLoginAttempts(int maxLoginAttempts = 5)
+    {
+        CheckUser();
+
+        LoginAttempts++;
+
+        if (LoginAttempts == maxLoginAttempts)
+        {
+            IsBlocked = true;
+        }
+    }
+
+    public void CheckUser()
+    {
+        if (IsBlocked)
+        {
+            throw new SlaisException(UserErrorCodes.UserIsBlocked);
+        }
+
+        switch (State)
+        {
+            case States.Pending:
+                throw new SlaisException(UserErrorCodes.UserIsNotActivated);
+            case States.Deactived:
+                throw new SlaisException(UserErrorCodes.UserIsDeactivated);
+            case States.Deleted:
+                throw new SlaisException(UserErrorCodes.UserIsDeleted);
+            case States.Active:
+                return;
+            default:
+                throw new SlaisException(UserErrorCodes.InvalidInput);
+        }
+    }
+
+    #endregion
+
+    #region RefreshToken
 
     public RefreshTokenEntity CreateRefreshToken(
         int expiresInDays,
@@ -212,7 +249,7 @@ public class UserEntity : UserNavigationPropertyEntity
         var activeRefreshTokensInTheDevice =
             RefreshTokens
                 .Where(rt => rt.DeviceGuid == deviceGuid
-                                                 && !rt.Revoked)
+                             && !rt.Revoked)
                 .ToList();
 
         foreach (var refreshToken in activeRefreshTokensInTheDevice)
@@ -220,6 +257,19 @@ public class UserEntity : UserNavigationPropertyEntity
             refreshToken.Revoke();
         }
     }
+
+    #endregion
+
+    #region Registration Code
+
+    public void CreateRegistrationCode()
+    {
+        var code = RegistrationCodeEntity.Create(Guid);
+
+        RegistrationCodes.Add(code);
+    }
+
+    #endregion
 
     #region Private
 
@@ -248,28 +298,6 @@ public class UserEntity : UserNavigationPropertyEntity
             || username.Length > 100)
         {
             throw new SlaisException(UserErrorCodes.InvalidInput);
-        }
-    }
-
-    public void CheckUser()
-    {
-        if (IsBlocked)
-        {
-            throw new SlaisException(UserErrorCodes.UserIsBlocked);
-        }
-
-        switch (State)
-        {
-            case States.Pending:
-                throw new SlaisException(UserErrorCodes.UserIsNotActivated);
-            case States.Deactived:
-                throw new SlaisException(UserErrorCodes.UserIsDeactivated);
-            case States.Deleted:
-                throw new SlaisException(UserErrorCodes.UserIsDeleted);
-            case States.Active:
-                return;
-            default:
-                throw new SlaisException(UserErrorCodes.InvalidInput);
         }
     }
 
